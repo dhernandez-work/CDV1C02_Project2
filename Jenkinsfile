@@ -24,13 +24,26 @@ pipeline {
                 echo "Setting up Python virtual environment..."
                 
                 // Create a virtual environment to isolate dependencies
-                // Using sh commands for macOS Jenkins agents
-                sh '''
-                    python3 -m venv ${PYTHON_ENV}
-                    source ${PYTHON_ENV}/bin/activate
-                    python3 -m pip install --upgrade pip
-                    pip install -r requirements.txt
-                '''
+                // Dynamically execute OS-specific commands
+                script {
+                    if (isUnix()) {
+                        // macOS / Linux commands
+                        sh '''
+                            python3 -m venv ${PYTHON_ENV}
+                            source ${PYTHON_ENV}/bin/activate
+                            python3 -m pip install --upgrade pip
+                            pip install -r requirements.txt
+                        '''
+                    } else {
+                        // Windows commands
+                        bat '''
+                            python -m venv %PYTHON_ENV%
+                            call %PYTHON_ENV%\\Scripts\\activate.bat
+                            python -m pip install --upgrade pip
+                            pip install -r requirements.txt
+                        '''
+                    }
+                }
             }
         }
 
@@ -41,15 +54,27 @@ pipeline {
             steps {
                 echo "Running pytest with coverage..."
                 
-                sh '''
-                    source ${PYTHON_ENV}/bin/activate
-                    
-                    # Create a reports directory if it doesn't exist
-                    mkdir -p reports
-                    
-                    # Run pytest, output XML for Jenkins, and generate coverage report
-                    pytest --cov=src tests/ --junitxml=reports/test-results.xml
-                '''
+                script {
+                    if (isUnix()) {
+                        sh '''
+                            source ${PYTHON_ENV}/bin/activate
+                            
+                            # Create a reports directory if it doesn't exist
+                            mkdir -p reports
+                            
+                            # Run pytest, output XML for Jenkins, and generate coverage report
+                            pytest --cov=src tests/ --junitxml=reports/test-results.xml
+                        '''
+                    } else {
+                        bat '''
+                            call %PYTHON_ENV%\\Scripts\\activate.bat
+                            
+                            if not exist reports mkdir reports
+                            
+                            pytest --cov=src tests/ --junitxml=reports/test-results.xml
+                        '''
+                    }
+                }
             }
             post {
                 always {
@@ -66,13 +91,23 @@ pipeline {
             steps {
                 echo "Running Pylint for static code analysis..."
                 
-                sh '''
-                    source ${PYTHON_ENV}/bin/activate
-                    
-                    # Run pylint on the src directory and output to a text file
-                    # The || true ensures the pipeline doesn't fail just because pylint found warnings
-                    pylint src/ > reports/pylint-report.txt || true
-                '''
+                script {
+                    if (isUnix()) {
+                        sh '''
+                            source ${PYTHON_ENV}/bin/activate
+                            
+                            # Run pylint on the src directory and output to a text file
+                            # The || true ensures the pipeline doesn't fail just because pylint found warnings
+                            pylint src/ > reports/pylint-report.txt || true
+                        '''
+                    } else {
+                        bat '''
+                            call %PYTHON_ENV%\\Scripts\\activate.bat
+                            
+                            pylint src/ > reports\\pylint-report.txt || exit 0
+                        '''
+                    }
+                }
             }
             post {
                 always {
