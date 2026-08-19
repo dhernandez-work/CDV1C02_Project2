@@ -7,7 +7,7 @@ def test_constructor():
     capacity = 5
     group = ClassGroup(capacity)
 
-    assert group.get_capacity() == 4 # this should fail
+    assert group.get_capacity() == 5 # 5 should pass, 4 should fail
 
 # --- Comprehensive Tests (Added for >90% Coverage) ---
 
