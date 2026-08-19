@@ -1,0 +1,11 @@
+# Core testing framework (Replaces JUnit)
+pytest
+
+# Generates code coverage reports to prove you hit the >90% requirement
+pytest-cov
+
+# Allows for mocking objects in tests, as required by the assignment rubric
+pytest-mock
+
+# Advanced Feature: Static code analysis (can be integrated into Jenkinsfile)
+pylint
