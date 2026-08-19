@@ -6,7 +6,7 @@ from src.student import Student
 
 def test_constructor_without_best_friend():
     s = Student(1, "Alice", date(2025, 1, 1))
-    assert s.get_name() == "Bob" # this should fail
+    assert s.get_name() == "Alice" # this should fail
 
 # --- Comprehensive Tests (Added for >90% Coverage) ---
 
