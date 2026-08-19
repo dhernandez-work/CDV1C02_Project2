@@ -18,18 +18,26 @@ class ClassGroup:
         self._size += 1
         return True
 
-    def remove_student(self, student_id: int) -> bool:
-        """Removes a student from the class group by their ID."""
+    def _find_student_index(self, student_id: int) -> int:
+        """Helper method to find a student's index by ID."""
         for i in range(self._size):
             if self._students[i].get_id() == student_id:
-                for j in range(i, self._size - 1):
-                    self._students[j] = self._students[j + 1]
+                return i
+        return -1
 
-                self._students[self._size - 1] = None
-                self._size -= 1
-                return True
+    def remove_student(self, student_id: int) -> bool:
+        """Removes a student from the class group by their ID."""
+        index = self._find_student_index(student_id)
+        
+        if index == -1:
+            return False
+            
+        for j in range(index, self._size - 1):
+            self._students[j] = self._students[j + 1]
 
-        return False
+        self._students[self._size - 1] = None
+        self._size -= 1
+        return True
 
     def get_the_oldest_student(self) -> Student:
         """Returns the oldest student in the class group."""
