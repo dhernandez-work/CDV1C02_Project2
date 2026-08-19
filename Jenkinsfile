@@ -63,7 +63,7 @@ pipeline {
                             mkdir -p reports
                             
                             # Run pytest, output XML for Jenkins, and generate coverage report
-                            pytest --cov=src tests/ --junitxml=reports/test-results.xml
+                            pytest --cov=src tests/ --junitxml=reports/test-results.xml --cov-fail-under=90
                         '''
                     } else {
                         bat '''
@@ -71,7 +71,7 @@ pipeline {
                             
                             if not exist reports mkdir reports
                             
-                            pytest --cov=src tests/ --junitxml=reports/test-results.xml
+                            pytest --cov=src tests/ --junitxml=reports/test-results.xml --cov-fail-under=90
                         '''
                     }
                 }
