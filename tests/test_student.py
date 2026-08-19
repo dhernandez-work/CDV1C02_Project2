@@ -67,3 +67,21 @@ def test_assign_random_username_with_mock():
     
     # Based on the mocked indices, it should pick the first 5 chars: "ABCDE"
     assert s.get_name() == "ABCDE"
+
+def test_equals_different_type():
+    # Edge Case: Comparing a Student object to a different data type
+    s1 = Student(1, "Alice", date(2025, 1, 1))
+
+    # Should safely return False without throwing an AttributeError
+    assert (s1 == "Alice") == False 
+    assert (s1 == 12345) == False
+
+def test_comparators_equality():
+    # Edge Case: Different students with the exact same name and birthday
+    s1 = Student(1, "Alice", date(2025, 1, 1))
+    s2 = Student(2, "Alice", date(2025, 1, 1))
+    
+    # Both comparators should return exactly 0 for identical values
+    assert Student.compare_by_name(s1, s2) == 0
+    assert Student.compare_by_birthday(s1, s2) == 0
+

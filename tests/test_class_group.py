@@ -69,3 +69,20 @@ def test_get_oldest_student_empty_group():
     # Edge Case: Getting oldest from an empty class
     group = ClassGroup(2)
     assert group.get_the_oldest_student() is None
+
+def test_remove_last_student():
+    # Boundary Case: Removing the student at the end of the populated array
+    group = ClassGroup(3)
+    s1 = Student(1, "Alice", date(2025, 1, 1))
+    s2 = Student(2, "Bob", date(2024, 1, 1))
+    group.add_student(s1)
+    group.add_student(s2)
+    
+    # Remove Bob, who is currently the last student at index 1
+    assert group.remove_student(2) == True
+    assert group.get_size() == 1
+    
+    # Alice should remain untouched at index 0
+    assert group.get_students()[0].get_name() == "Alice"
+    # The slot Bob occupied should now be None
+    assert group.get_students()[1] is None
