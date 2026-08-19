@@ -1,4 +1,5 @@
 """This module defines the ClassGroup class."""
+from typing import Optional
 from src.student import Student
 
 class ClassGroup:
@@ -28,10 +29,10 @@ class ClassGroup:
     def remove_student(self, student_id: int) -> bool:
         """Removes a student from the class group by their ID."""
         index = self._find_student_index(student_id)
-        
+
         if index == -1:
             return False
-            
+ 
         for j in range(index, self._size - 1):
             self._students[j] = self._students[j + 1]
 
@@ -39,7 +40,7 @@ class ClassGroup:
         self._size -= 1
         return True
 
-    def get_the_oldest_student(self) -> Student:
+    def get_the_oldest_student(self) -> Optional[Student]:
         """Returns the oldest student in the class group."""
         if self._size == 0:
             return None
