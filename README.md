@@ -12,7 +12,7 @@ A comprehensive Continuous Integration and Continuous Deployment (CI/CD) impleme
 * **Static Code Analysis:** `pylint`, SonarQube Cloud
 * **CI/CD Automation:** Jenkins (Declarative Pipeline)
 * **Environment Management:** `Makefile`, `direnv`
-* **Version Control:** Git & GitHub (Feature Branch Workflow)
+* **Version Control:** Git & GitHub (Feature Branch Workflow, Semantic Versioning)
 
 ---
 
@@ -21,7 +21,7 @@ A comprehensive Continuous Integration and Continuous Deployment (CI/CD) impleme
     CDV1C02_Project2/
     │
     ├── src/
-    │   ├── __init__.py
+    │   ├── __init__.py         # Package initialization and single-source versioning (__version__)
     │   ├── student.py          # Student model with getters, setters, and comparators
     │   └── class_group.py      # ClassGroup collection manager with abstraction logic
     │
@@ -37,7 +37,7 @@ A comprehensive Continuous Integration and Continuous Deployment (CI/CD) impleme
     ├── .gitignore               # Environment and cache ignore rules
     ├── app.py                   # Flask application routing and logic
     ├── Jenkinsfile              # Cross-platform Declarative Pipeline script
-    ├── Makefile                 # Environment build and Git workflow automation
+    ├── Makefile                 # Environment build, Git, and Release automation
     ├── requirements.txt         # Project dependencies
     └── README.md                # Project documentation
 
@@ -51,3 +51,4 @@ This project utilizes a `Makefile` to streamline local development, standardize 
 * **`make prod`**: Builds the isolated production server environment with a `(PROD)` prompt and installs dependencies.
 * **`make clean`**: Safely removes the existing virtual environment.
 * **`make push m="your commit message"`**: Automates the `git add .`, `git commit -m`, and `git push origin master` sequence.
+* **`make tag v="1.0.0" m="Release notes"`**: Automates tagging the current commit and pushing the Semantic Version tag to GitHub for releases.
