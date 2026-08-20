@@ -5,7 +5,7 @@
 # for both the Development workspace and the Production server environments.
 # ==============================================================================
 
-.PHONY: dev prod clean push
+.PHONY: dev prod clean push tag
 
 # ------------------------------------------------------------------------------
 # Target: dev
@@ -49,3 +49,14 @@ push:
 	git commit -m "$(m)"
 	@echo ">>> Pushing to origin master..."
 	git push origin master
+
+# ------------------------------------------------------------------------------
+# Target: tag
+# Purpose: Tags the current commit with a version number and pushes the tag.
+# Usage: make tag v="1.0.0" m="Release 1.0.0 - Added web interface"
+# ------------------------------------------------------------------------------
+tag:
+	@echo ">>> Tagging release v$(v)..."
+	git tag -a v$(v) -m "$(m)"
+	@echo ">>> Pushing tag to GitHub..."
+	git push origin v$(v)

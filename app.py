@@ -3,8 +3,10 @@ import os
 from datetime import date
 from flask import Flask, render_template, request, redirect, url_for
 from flask_wtf.csrf import CSRFProtect
+from src import __version__
 from src.class_group import ClassGroup
 from src.student import Student
+
 
 app = Flask(__name__)
 
@@ -40,7 +42,8 @@ def index():
         students=live_class.get_students(), 
         size=live_class.get_size(), 
         capacity=live_class.get_capacity(), 
-        error=error
+        error=error,
+        version=__version__
     )
 
 if __name__ == '__main__':
