@@ -127,7 +127,7 @@ pipeline {
                     if (isUnix()) {
                         sh '''
                             mkdir -p /tmp/Production_Server/CDV1C02_Web
-                            cp -r src templates app.py requirements.txt /tmp/Production_Server/CDV1C02_Web/
+                            cp -r src templates app.py requirements.txt Makefile /tmp/Production_Server/CDV1C02_Web/
                         '''
                     } else {
                         bat '''
@@ -136,6 +136,7 @@ pipeline {
                             xcopy /E /Y /I templates "C:\\Production_Server\\CDV1C02_Web\\templates\\"
                             copy /Y app.py "C:\\Production_Server\\CDV1C02_Web\\"
                             copy /Y requirements.txt "C:\\Production_Server\\CDV1C02_Web\\"
+                            copy /Y Makefile "C:\\Production_Server\\CDV1C02_Web\\"
                         '''
                     }
                 }
