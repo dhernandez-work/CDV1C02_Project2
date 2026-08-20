@@ -1,10 +1,16 @@
 """Web application entry point for the ClassGroup manager."""
+import os
 from datetime import date
 from flask import Flask, render_template, request, redirect, url_for
+from flask_wtf.csrf import CSRFProtect
 from src.class_group import ClassGroup
 from src.student import Student
 
 app = Flask(__name__)
+
+# Initialize CSRF Protection with a secure random key
+app.config['SECRET_KEY'] = os.urandom(32)
+csrf = CSRFProtect(app)
 
 # Initialize a global ClassGroup with a capacity of 5 for demonstration
 live_class = ClassGroup(5)
@@ -37,4 +43,5 @@ def index():
     )
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # Deactivated debug feature for production security
+    app.run(debug=False, port=5000)

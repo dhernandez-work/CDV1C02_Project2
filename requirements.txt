@@ -12,3 +12,6 @@ pylint
 
 # Live deployment
 Flask==3.0.0
+
+# CSRF protection for Flask web application (SonarQube security fix)
+Flask-WTF==1.2.1

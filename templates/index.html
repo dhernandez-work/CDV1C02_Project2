@@ -28,6 +28,10 @@
             <button type="submit">Register Student</button>
         </form>
 
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <label for="id">Student ID:</label><br>
+
         <h2>Registered Students</h2>
         <table>
             <tr>
