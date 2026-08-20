@@ -5,7 +5,7 @@
 # for both the Development workspace and the Production server environments.
 # ==============================================================================
 
-.PHONY: dev prod clean
+.PHONY: dev prod clean push
 
 # ------------------------------------------------------------------------------
 # Target: dev
@@ -36,3 +36,16 @@ prod: clean
 clean:
 	@echo ">>> Removing existing virtual environment..."
 	rm -rf venv
+
+# ------------------------------------------------------------------------------
+# Target: push
+# Purpose: Automates the Git add, commit, and push sequence.
+# Usage: make push m="your commit message here"
+# ------------------------------------------------------------------------------
+push:
+	@echo ">>> Staging all changes..."
+	git add .
+	@echo ">>> Committing with message: $(m)"
+	git commit -m "$(m)"
+	@echo ">>> Pushing to origin master..."
+	git push origin master
