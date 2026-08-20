@@ -9,3 +9,6 @@ pytest-mock
 
 # Advanced Feature: Static code analysis (can be integrated into Jenkinsfile)
 pylint
+
+# Live deployment
+Flask==3.0.0

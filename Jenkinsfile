@@ -116,6 +116,32 @@ pipeline {
                 }
             }
         }
+
+        // --------------------------------------------------------
+        // Stage 5: Continuous Deployment
+        // --------------------------------------------------------
+        stage('Deploy') {
+            steps {
+                echo 'Packaging and Deploying to Production environment...'
+                script {
+                    if (isUnix()) {
+                        sh '''
+                            mkdir -p /tmp/Production_Server/CDV1C02_Web
+                            cp -r src templates app.py requirements.txt /tmp/Production_Server/CDV1C02_Web/
+                        '''
+                    } else {
+                        bat '''
+                            if not exist "C:\\Production_Server\\CDV1C02_Web" mkdir "C:\\Production_Server\\CDV1C02_Web"
+                            xcopy /E /Y /I src "C:\\Production_Server\\CDV1C02_Web\\src\\"
+                            xcopy /E /Y /I templates "C:\\Production_Server\\CDV1C02_Web\\templates\\"
+                            copy /Y app.py "C:\\Production_Server\\CDV1C02_Web\\"
+                            copy /Y requirements.txt "C:\\Production_Server\\CDV1C02_Web\\"
+                        '''
+                    }
+                }
+                echo 'Deployment successful! Artifacts delivered to production directory.'
+            }
+        }
     }
 
     // Post-build actions to handle pipeline outcomes

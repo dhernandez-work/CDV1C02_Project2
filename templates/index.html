@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ClassGroup Manager</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; margin: auto; }
+        .error { color: red; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ClassGroup Manager</h1>
+        <p>Capacity: <strong>{{ size }} / {{ capacity }}</strong></p>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST">
+            <label for="id">Student ID:</label><br>
+            <input type="text" id="id" name="id" required><br><br>
+            <label for="name">Student Name:</label><br>
+            <input type="text" id="name" name="name" required><br><br>
+            <button type="submit">Register Student</button>
+        </form>
+
+        <h2>Registered Students</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+            {% for student in students %}
+                {% if student %}
+                <tr>
+                    <td>{{ student.get_id() }}</td>
+                    <td>{{ student.get_name() }}</td>
+                </tr>
+                {% endif %}
+            {% else %}
+                <tr><td colspan="2">No students registered yet.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
