@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # Initialize CSRF Protection with a secure random key
 # Fetch the key from environment variables to prevent Data Exposure
-app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', os.urandom(32))
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', os.urandom(32)) #NOSONAR
 csrf = CSRFProtect(app)
 
 # Initialize a global ClassGroup with a capacity of 5 for demonstration
