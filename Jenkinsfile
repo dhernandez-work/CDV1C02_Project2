@@ -17,7 +17,7 @@ pipeline {
         }
 
         // --------------------------------------------------------
-        // Stage 2: Set up the Python virtual environment
+        // Stage 2: Set up the Python virtual environment & Log Version
         // --------------------------------------------------------
         stage('Setup Environment') {
             steps {
@@ -33,6 +33,9 @@ pipeline {
                             source ${PYTHON_ENV}/bin/activate
                             python3 -m pip install --upgrade pip
                             pip install -r requirements.txt
+                            
+                            echo "=== Building Application Version ==="
+                            python3 -c "import src; print(src.__version__)"
                         '''
                     } else {
                         // Windows commands
@@ -41,6 +44,9 @@ pipeline {
                             call %PYTHON_ENV%\\Scripts\\activate.bat
                             python -m pip install --upgrade pip
                             pip install -r requirements.txt
+                            
+                            echo === Building Application Version ===
+                            python -c "import src; print(src.__version__)"
                         '''
                     }
                 }
@@ -62,8 +68,8 @@ pipeline {
                             # Create a reports directory if it doesn't exist
                             mkdir -p reports
                             
-                            # Run pytest, output XML for Jenkins, and generate coverage report
-                            pytest --cov=src tests/ --junitxml=reports/test-results.xml --cov-fail-under=90
+                            # Run pytest, output XML for Jenkins, and generate XML coverage report for SonarQube
+                            pytest --cov=src tests/ --junitxml=reports/test-results.xml --cov-report=xml:reports/coverage.xml --cov-fail-under=90
                         '''
                     } else {
                         bat '''
@@ -71,7 +77,7 @@ pipeline {
                             
                             if not exist reports mkdir reports
                             
-                            pytest --cov=src tests/ --junitxml=reports/test-results.xml --cov-fail-under=90
+                            pytest --cov=src tests/ --junitxml=reports/test-results.xml --cov-report=xml:reports/coverage.xml --cov-fail-under=90
                         '''
                     }
                 }
@@ -85,34 +91,33 @@ pipeline {
         }
 
         // --------------------------------------------------------
-        // Stage 4: Advanced Feature - Static Code Analysis
+        // Stage 4: Static Code Analysis (SonarQube)
         // --------------------------------------------------------
-        stage('Static Analysis (Pylint)') {
+        stage('SonarQube Analysis') {
+            // Note: Ensure your SonarQube token is saved in Jenkins credentials as 'sonarqube-token'
+            environment {
+                SONAR_TOKEN = credentials('sonarqube-token') 
+            }
             steps {
-                echo "Running Pylint for static code analysis..."
+                echo "Running SonarScanner for Python..."
                 
                 script {
                     if (isUnix()) {
                         sh '''
                             source ${PYTHON_ENV}/bin/activate
+                            pip install pysonar
                             
-                            # Run pylint on the src directory and output to a text file
-                            # The || true ensures the pipeline doesn't fail just because pylint found warnings
-                            pylint src/ > reports/pylint-report.txt || true
+                            # Execute the scanner (it automatically reads sonar-project.properties)
+                            pysonar -Dsonar.host.url=https://sonarcloud.io
                         '''
                     } else {
                         bat '''
                             call %PYTHON_ENV%\\Scripts\\activate.bat
+                            pip install pysonar
                             
-                            pylint src/ > reports\\pylint-report.txt || exit 0
+                            pysonar -Dsonar.host.url=https://sonarcloud.io
                         '''
                     }
-                }
-            }
-            post {
-                always {
-                    // Save the static analysis report as a build artifact for review
-                    archiveArtifacts artifacts: 'reports/pylint-report.txt', allowEmptyArchive: true
                 }
             }
         }
